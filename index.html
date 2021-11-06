@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+        <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+     
+
+    <title>Document</title>
+</head>
+<body>
+    <div id="map"></div>
+    <style>
+        #map{
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+    <script>
+        var map = L.map('map').setView([19,10],3);
+        L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=LuriVK8ZaIIs19DulhKO',
+        {attribution:'<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'}).addTo(map);
+            var marker = L.marker([51,52], {
+                    draggable: true,
+                }).addTo(map);
+        var circle = L.circle([51.508,-0.11],{
+            color:'red',
+            fillColor:'#f03',
+            fillOpacity:0.5,
+            radius:500
+        }).addTo(map);
+
+        var polygon = L.polygon([
+            [51.509,-0.08],
+            [51.503,-0.06],
+            [51.51,-0.047]
+        ]).addTo(map);
+
+        marker.bindPopup("Lat,Lng:51,52")
+        circle.bindPopup ("I am  a circle");
+        polygon.bindPopup("I am  a polygon");
+      
+
+           
+            L.Control.geocoder().addTo(map);
+
+     
+                var mh;
+          map.on('click',function(e){
+              
+               let lat;
+              lat = e.latlng.lat;
+              console.log("Latitude:" + lat);
+              let lng;
+              lng = e.latlng.lng;
+              console.log("Longitude:" + lng);
+              mh = ("Lat:"+lat + ","+"Lon:" + lng);
+             alert(mh);
+            marker.setLatLng([e.latlng.lat,e.latlng.lng],{
+                draggable:true
+            }).addTo(map);
+                      //openweathermap
+              const API_KEY = "828be8804d99e476b5519c50870c72e4";
+             fetch('https://api.openweathermap.org/data/2.5/weather?lat='+lat+'&lon='+lng+'&units=metric&appid=828be8804d99e476b5519c50870c72e4')
+                  .then(res => res.json())
+                  .then(data =>{
+                       console.log(data)
+                       var name = data['name'];
+                       var temp = data['main']['temp'];
+                       var country = data['sys']['country'];
+                       var desc = data['weather'][0]['description']
+                    marker.bindPopup("PLACE: "+name+"<br>"+"TEMP: "+temp+"C<br>"+desc);})
+                     
+          console.log(mh);
+         
+          });
+
+         
+
+
+
+
+
+
+          
+           
+
+
+    </script>
+  
+
+</body>
+</html>
